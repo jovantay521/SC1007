@@ -107,7 +107,47 @@ void deleteList(ListNode **ptrHead){
 	*ptrHead=NULL;
 }
 
-int split(ListNode *cur, ListNode **ptrEvenList,ListNode **ptrOddList)
+int split(ListNode *head, ListNode **ptrEvenList,ListNode **ptrOddList)
 {
     /* Write your program code here. */
+    ListNode *cur = head, *evenEnd = NULL, *oddEnd = NULL;
+
+    while (cur != NULL) {
+        if ((cur -> item) % 2 == 0) {
+            if (*ptrEvenList == NULL) {
+                evenEnd = malloc(sizeof(ListNode));
+                evenEnd = cur;
+                *ptrEvenList = evenEnd;
+            } 
+
+            else {
+                evenEnd -> next = cur;
+                evenEnd = evenEnd -> next;
+            }
+        } 
+        
+        else {
+            if (*ptrOddList == NULL) {
+                oddEnd = malloc(sizeof(ListNode));
+                oddEnd = cur;
+                *ptrOddList = oddEnd;
+            } 
+
+            else {
+                oddEnd -> next = cur;
+                oddEnd = oddEnd -> next;
+            }
+        }
+        
+        cur = cur -> next;
+
+    }
+
+    if (*ptrEvenList == NULL || *ptrOddList == NULL)
+        return -1;
+
+    else {
+        return 0;
+    }
+    
 }
