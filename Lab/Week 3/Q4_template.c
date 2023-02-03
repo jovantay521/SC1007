@@ -11,39 +11,37 @@ typedef struct _listnode{
 void printList(ListNode *cur);
 ListNode * findNode(ListNode *cur, int index);
 int insertNode(ListNode **ptrHead, int index, int item);
-int removeNode(ListNode **ptrHead,int index);
-
+void deleteList(ListNode **ptrHead);
+int duplicateReverse(ListNode *cur,ListNode **ptrNewHead);
 
 int main()
 {
     ListNode *head=NULL;
+    ListNode *dupRevHead=NULL;
     int size =0;
     int item;
-    int index;
 
     printf("Enter a list of numbers, terminated by any non-digit character: \n");
     while(scanf("%d",&item))
         if(insertNode(&head,size, item)) size++;
     scanf("%*s");
 
+    printf("\nBefore duplicateReverse() is called:\n");
     printList(head);
 
-    while(1){
-        printf("Enter the index of the node to be removed: ");
-        scanf("%d",&index);
+    duplicateReverse(head,&dupRevHead);
 
-        if(!removeNode(&head,index))
-            size--;
-        else{
-            printf("The node cannot be removed.\n");
-            break;
-        }
-
-        printf("After the removal operation,\n");
-        printList(head);
-    }
-
+    printf("\nAfter duplicateReverse() was called:\n");
+    printf("The original list:\n");
     printList(head);
+    printf("The duplicated reverse list:\n");
+    printList(dupRevHead);
+
+    if(head!=NULL)
+       deleteList(&head);
+    if(dupRevHead)
+       deleteList(&dupRevHead);
+
     return 0;
 }
 
@@ -56,8 +54,7 @@ void printList(ListNode *cur){
     printf("\n");
 }
 
-ListNode *findNode(ListNode* cur, int index)
-{
+ListNode *findNode(ListNode* cur, int index){
    if (cur==NULL || index<0)
       return NULL;
    while(index>0){
@@ -91,28 +88,46 @@ int insertNode(ListNode **ptrHead, int index, int item){
     return 0;
 }
 
-int removeNode(ListNode **ptrHead,int index) {
-    /* Write your program code here */
-    ListNode *prev, *cur = *ptrHead;
+void deleteList(ListNode **ptrHead){
+    ListNode *cur = *ptrHead;
+    ListNode *temp;
+    while (cur!= NULL) {
+        temp=cur->next;
+        free(cur);
+        cur=temp;
+    }
+    *ptrHead=NULL;
+}
 
-    // sanity check for empty list
-    if (!*ptrHead) {
+int duplicateReverse(ListNode *head,ListNode **ptrNewHead){
+    /* Write your program code here*/
+    int revSize = 0;
+    ListNode *prev = NULL, *cur = head, *next = NULL;
+
+    if (!cur) return -1;
+
+    while (cur) {
+        insertNode(ptrNewHead, 0, cur->item);
+        cur = cur -> next;
+    }
+
+    return 0;
+    /*
+    while (cur) {
+        // store next
+        next = cur -> next;
+        // reverse cur pointer
+        cur -> next = prev;
+        // move pointer one ahead
+        prev = cur;
+        cur = next;
+    }
+    // set head pointer to end
+    *ptrNewHead = prev;
+
+    if (!*ptrNewHead) {
         return -1;
     }
-
-    if (index == 0) {
-        *ptrHead = cur -> next; // sets head pointer to next node
-        free(cur);
-        return 0;
-    }
-
-    else if ((prev = findNode(*ptrHead, index - 1)) != NULL && (cur = prev -> next) != NULL) { // finds previous node and check current node not empty
-        prev -> next = cur -> next;
-        free(cur);
-        return 0;
-    }
-
-    else {
-        return -1;
-    }
+    return 0;
+    */
 }
