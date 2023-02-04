@@ -8,13 +8,15 @@ typedef struct _listnode{
 } ListNode;
 
 
+// declaring functions
 void printList(ListNode *cur);
 ListNode * findNode(ListNode *cur, int index);
 int insertNode(ListNode **ptrHead, int index, int item);
 void deleteList(ListNode **ptrHead);
-
 int split(ListNode *cur,ListNode **ptrEvenList,ListNode **ptrOddList);
 
+
+// driver code
 int main()
 {
     ListNode *head=NULL;
@@ -110,38 +112,55 @@ void deleteList(ListNode **ptrHead){
 int split(ListNode *head, ListNode **ptrEvenList,ListNode **ptrOddList)
 {
     /* Write your program code here. */
+    int evenSize = 0, oddSize = 0;
     ListNode *cur = head, *evenEnd = NULL, *oddEnd = NULL;
 
+    while (cur) {
+        if ((cur -> item)%2 == 0) {
+            insertNode(ptrEvenList, evenSize, cur->item);
+            evenSize++;
+        }
+
+        else {
+            insertNode(ptrOddList, oddSize, cur->item);
+            oddSize++;
+        }
+
+        cur = cur -> next;
+    }
+    /*
     while (cur != NULL) {
         if ((cur -> item) % 2 == 0) {
-            if (*ptrEvenList == NULL) {
-                evenEnd = malloc(sizeof(ListNode));
-                evenEnd = cur;
-                *ptrEvenList = evenEnd;
-            } 
-
-            else {
+            if (*ptrEvenList) {
                 evenEnd -> next = cur;
                 evenEnd = evenEnd -> next;
             }
-        } 
-        
-        else {
-            if (*ptrOddList == NULL) {
-                oddEnd = malloc(sizeof(ListNode));
-                oddEnd = cur;
-                *ptrOddList = oddEnd;
-            } 
 
             else {
+                evenEnd = malloc(sizeof(ListNode));
+                evenEnd = *ptrEvenList = cur;
+            }
+        }
+
+        else {
+            if (*ptrOddList) {
                 oddEnd -> next = cur;
                 oddEnd = oddEnd -> next;
             }
+
+            else {
+                oddEnd = malloc(sizeof(ListNode));
+                oddEnd = *ptrOddList = cur;
+            }
         }
-        
+
         cur = cur -> next;
 
     }
+
+    evenEnd -> next = NULL; // breaks the link to original ll
+    oddEnd -> next = NULL;
+    */
 
     if (*ptrEvenList == NULL || *ptrOddList == NULL)
         return -1;
@@ -149,5 +168,5 @@ int split(ListNode *head, ListNode **ptrEvenList,ListNode **ptrOddList)
     else {
         return 0;
     }
-    
+
 }

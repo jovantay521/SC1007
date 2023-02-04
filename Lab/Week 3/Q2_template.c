@@ -122,12 +122,14 @@ int removeNode2(LinkedList *ll,int index)
     if (index == 0) {
         ll -> head = cur -> next;
         free(cur);
+        11->size--;
         return 1;
     }
 
     else if ((pre = findNode2(*ll, index - 1)) != NULL && (cur = pre -> next) != NULL) {
         pre -> next = cur -> next;
         free(cur);
+        ll->size--;
         return 1;
     }
 
