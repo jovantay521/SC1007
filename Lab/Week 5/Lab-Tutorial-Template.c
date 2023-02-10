@@ -1,7 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "stdio.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 //////////////////////////////////   linked list //////////////////////////////////////////////
 
@@ -91,8 +92,8 @@ int main()
 	printList(q.ll.head);
 
 	//for question 3
-	palindrome(word1); //*word1="A man a plan a canal Panama";
-	palindrome(word2);// *word2="Superman in the sky";
+	printf("%d\n", palindrome(word1)); //*word1="A man a plan a canal Panama";
+	printf("%d\n", palindrome(word2));// *word2="Superman in the sky";
 
 
 	//for question 4
@@ -121,6 +122,11 @@ int main()
 void removeUntil(Stack *s, int value){
 
 	// write your code here
+	while (peek(s) != value && !isEmptyStack(s)) {
+		pop(s);
+	}
+
+	return;
 }
 
 ////////////////////////////////////////////////////////////
@@ -129,7 +135,19 @@ void removeUntil(Stack *s, int value){
 void recursiveReverse(Queue *q){
 
 	// write your code here
+	Stack temp;
+	temp.ll.head = NULL;
+	temp.ll.size = 0;
+	temp.ll.tail = NULL;
+	while (!isEmptyQueue(q)) {
+		push(&temp, dequeue(q));
+	}
 
+	while (!isEmptyStack(&temp)) {
+		enqueue(q, pop(&temp));
+	}
+
+	return;
 }
 
 ////////////////////////////////////////////////////////////
@@ -138,8 +156,31 @@ void recursiveReverse(Queue *q){
 int palindrome(char *word){
 
 	// write your code here
-}
+	Stack reverse;
+	reverse.ll.head = NULL;
+	reverse.ll.size = 0;
+	reverse.ll.tail = NULL;
 
+	for(int i = 0; word[i]; i++){
+  		word[i] = tolower(word[i]);
+		push(&reverse, word[i]);
+	}
+
+	// int arr_size = sizeof(word)/sizeof(word[0]);
+
+	// for (int i = 0; word[i]; i++) {
+	// 	push(&reverse, word[i]);
+	// }
+
+	for (int i = 0; word[i]; i++) {
+		if (word[i] != pop(&reverse)) {
+			return -1;
+		}
+	}
+
+	return 0;
+
+}
 
 
 ////////////////////////////////////////////////////////////

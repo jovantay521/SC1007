@@ -32,12 +32,16 @@ typedef struct _queue{
 ///////////////////////// function prototypes ////////////////////////////////////
 
 // You should not change the prototypes of these functions
-void sortStack(Stack *s);
+void reverseFirstKItems(Queue *q, int k);
 
 void push(Stack *s, int item);
 int pop(Stack *s);
 int peek(Stack *s);
 int isEmptyStack(Stack *s);
+
+void enqueue(Queue *q, int item);
+int dequeue(Queue *q);
+int isEmptyQueue(Queue *s);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void printList(LinkedList *ll);
@@ -53,17 +57,17 @@ int main()
 {
     int c, value;
 
-    Stack s;
+    Queue q;
 
     //initialize the stack
-	s.ll.head =NULL;
-	s.ll.size =0;
+	q.ll.head =NULL;
+	q.ll.size =0;
 
 
     c =1;
 
-    printf("1: Insert an integer into the stack;\n");
-    printf("2: Sort the stack in ascending order ;\n");
+    printf("1: Insert an integer into the queue;\n");
+    printf("2: Reverse the elements of the queue until the given number;\n");
     printf("0: Quit;\n");
 
     while (c != 0)
@@ -74,20 +78,22 @@ int main()
 		switch (c)
 		{
 		case 1:
-			printf("Input an integer that you want to insert into the stack: ");
+			printf("Input an integer that you want to insert into the queue: ");
 			scanf("%d", &value);
-			push(&s, value);
-			printf("The resulting stack is: ");
-			printList(&(s.ll));
+			enqueue(&q, value);
+			printf("The resulting queue is: ");
+			printList(&(q.ll));
 			break;
 		case 2:
-			sortStack(&s); // You need to code this function
-			printf("The resulting stack after sorting it in ascending order is: ");
-			printList(&(s.ll));
-			removeAllItems(&(s.ll));
+			printf("Enter an integer to reverse the queue until that number: ");
+            scanf("%d",&value);
+			reverseFirstKItems(&q, value);// You need to code this function
+			printf("The resulting queue after reversing first %d elements is: ", value);
+			printList(&(q.ll));
+			removeAllItems(&(q.ll));
 			break;
 		case 0:
-			removeAllItems(&(s.ll));
+			removeAllItems(&(q.ll));
 			break;
 		default:
 			printf("Choice unknown;\n");
@@ -100,9 +106,34 @@ int main()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void sortStack(Stack *s)
+
+void reverseFirstKItems(Queue *q, int k)
 {
     /* add your code here */
+	Stack s;
+	if (isEmptyQueue(q) || k > q->ll.size) {
+		return;
+	}
+	
+	s.ll.head = NULL;
+	s.ll.size = 0;
+	s.ll.tail = NULL;
+	
+	for (int i = 0; i < k; i++) {
+		push(&s,dequeue(q));
+	}
+
+	while (!isEmptyStack(&s)) {
+		enqueue(q,pop(&s));
+	}
+
+	int j = q->ll.size;
+
+	for (int i = 0; i < j-k; i++) {
+		enqueue(q,dequeue(q));
+	}
+
+	return;
 }
 
 
@@ -128,6 +159,23 @@ int peek(Stack *s){
 
 int isEmptyStack(Stack *s){
    if ((s->ll).size == 0)
+      return 1;
+   return 0;
+}
+
+void enqueue(Queue *q, int item){
+   insertNode(&(q->ll), q->ll.size, item);
+}
+
+int dequeue(Queue *q){
+   int item;
+   item = ((q->ll).head)->item;
+   removeNode(&(q->ll), 0);
+   return item;
+}
+
+int isEmptyQueue(Queue *q){
+   if ((q->ll).size == 0)
       return 1;
    return 0;
 }

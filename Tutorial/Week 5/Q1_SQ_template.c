@@ -32,7 +32,7 @@ typedef struct _queue{
 ///////////////////////// function prototypes ////////////////////////////////////
 
 // You should not change the prototypes of these functions
-void reverseFirstKItems(Queue *q, int k);
+void reverseStack(Stack *s);
 
 void push(Stack *s, int item);
 int pop(Stack *s);
@@ -57,17 +57,17 @@ int main()
 {
     int c, value;
 
-    Queue q;
+    Stack s;
 
     //initialize the stack
-	q.ll.head =NULL;
-	q.ll.size =0;
+	s.ll.head =NULL;
+	s.ll.size =0;
 
 
     c =1;
 
-    printf("1: Insert an integer into the queue;\n");
-    printf("2: Reverse the elements of the queue until the given number;\n");
+    printf("1: Insert an integer into the stack;\n");
+    printf("2: Reverse the stack;\n");
     printf("0: Quit;\n");
 
     while (c != 0)
@@ -78,22 +78,20 @@ int main()
 		switch (c)
 		{
 		case 1:
-			printf("Input an integer that you want to insert into the queue: ");
+			printf("Input an integer that you want to insert into the stack: ");
 			scanf("%d", &value);
-			enqueue(&q, value);
-			printf("The resulting queue is: ");
-			printList(&(q.ll));
+			push(&s, value);
+			printf("The resulting stack is: ");
+			printList(&(s.ll));
 			break;
 		case 2:
-			printf("Enter an integer to reverse the queue until that number: ");
-            scanf("%d",&value);
-			reverseFirstKItems(&q, value);// You need to code this function
-			printf("The resulting queue after reversing first %d elements is: ", value);
-			printList(&(q.ll));
-			removeAllItems(&(q.ll));
+			reverseStack(&s); // You need to code this function
+			printf("The resulting stack after reversing its elements is: ");
+			printList(&(s.ll));
+			removeAllItems(&(s.ll));
 			break;
 		case 0:
-			removeAllItems(&(q.ll));
+			removeAllItems(&(s.ll));
 			break;
 		default:
 			printf("Choice unknown;\n");
@@ -107,11 +105,23 @@ int main()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void reverseFirstKItems(Queue *q, int k)
+void reverseStack(Stack *s)
 {
-    /* add your code here */
-}
+	/* add your code here */
+	Queue q;
+	q.ll.head = NULL;
+	q.ll.size = 0;
+	q.ll.tail = NULL;
+	while (!isEmptyStack(s)) {
+		enqueue(&q, pop(s));
+	}
 
+	while (!isEmptyQueue(&q)) {
+		push(s, dequeue(&q));
+	}
+
+	return;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

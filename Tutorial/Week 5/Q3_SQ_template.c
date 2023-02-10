@@ -32,16 +32,12 @@ typedef struct _queue{
 ///////////////////////// function prototypes ////////////////////////////////////
 
 // You should not change the prototypes of these functions
-void reverseStack(Stack *s);
+void sortStack(Stack *s);
 
 void push(Stack *s, int item);
 int pop(Stack *s);
 int peek(Stack *s);
 int isEmptyStack(Stack *s);
-
-void enqueue(Queue *q, int item);
-int dequeue(Queue *q);
-int isEmptyQueue(Queue *s);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void printList(LinkedList *ll);
@@ -67,7 +63,7 @@ int main()
     c =1;
 
     printf("1: Insert an integer into the stack;\n");
-    printf("2: Reverse the stack;\n");
+    printf("2: Sort the stack in ascending order ;\n");
     printf("0: Quit;\n");
 
     while (c != 0)
@@ -85,8 +81,8 @@ int main()
 			printList(&(s.ll));
 			break;
 		case 2:
-			reverseStack(&s); // You need to code this function
-			printf("The resulting stack after reversing its elements is: ");
+			sortStack(&s); // You need to code this function
+			printf("The resulting stack after sorting it in ascending order is: ");
 			printList(&(s.ll));
 			removeAllItems(&(s.ll));
 			break;
@@ -104,11 +100,30 @@ int main()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-void reverseStack(Stack *s)
+void sortStack(Stack *s)
 {
-	/* add your code here */
+    /* add your code here */
+	int temp;
+	Stack ts;
+	ts.ll.head = NULL;
+	ts.ll.size = 0;
+
+	while (!isEmptyStack(s)) {
+		push(&ts, pop(s));
+	}
+
+	while(!isEmptyStack(&ts)) {
+		temp = pop(&ts);
+
+		while (!isEmptyStack(s) && peek(s) < temp) {
+			push(&ts, pop(s));
+		}
+
+		push(s, temp);
+	}
+
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -132,23 +147,6 @@ int peek(Stack *s){
 
 int isEmptyStack(Stack *s){
    if ((s->ll).size == 0)
-      return 1;
-   return 0;
-}
-
-void enqueue(Queue *q, int item){
-   insertNode(&(q->ll), q->ll.size, item);
-}
-
-int dequeue(Queue *q){
-   int item;
-   item = ((q->ll).head)->item;
-   removeNode(&(q->ll), 0);
-   return item;
-}
-
-int isEmptyQueue(Queue *q){
-   if ((q->ll).size == 0)
       return 1;
    return 0;
 }
