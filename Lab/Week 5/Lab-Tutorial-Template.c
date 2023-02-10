@@ -176,6 +176,7 @@ int palindrome(char *word){
 	}
 
 	// check for character mismatch between word(queue) and reversed version(stack)
+	// less efficient method, only need to compare half a string if palindrome
 	while (!isEmptyQueue(&q) && !isEmptyStack(&s)) {
         if (pop(&s) != dequeue(&q)) {
             return -1;
