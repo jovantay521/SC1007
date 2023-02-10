@@ -1,7 +1,9 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-#include "stdio.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
 //////////////////////////////////   linked list //////////////////////////////////////////////
 
@@ -32,7 +34,7 @@ void printList(ListNode *head);
 ListNode * findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
-
+int isMatchingPair(char character1, char character2);
 //////////////////////////////////////////////////
 
 void push(Stack *s, int item);
@@ -91,11 +93,12 @@ int main()
 	printList(q.ll.head);
 
 	//for question 3
-	palindrome(word1); //*word1="A man a plan a canal Panama";
-	palindrome(word2);// *word2="Superman in the sky";
+	printf("%d\n", palindrome(word1)); //*word1="A man a plan a canal Panama";
+	printf("%d\n", palindrome(word2));// *word2="Superman in the sky";
 
 
 	//for question 4
+	// check for not equal to 0
 	if (balanced("()")) printf("not balanced!\n");
 	else
 		printf("balanced!\n");
@@ -121,6 +124,11 @@ int main()
 void removeUntil(Stack *s, int value){
 
 	// write your code here
+	while (peek(s) != value && !isEmptyStack(s)) {
+		pop(s);
+	}
+
+	return;
 }
 
 ////////////////////////////////////////////////////////////
@@ -129,7 +137,19 @@ void removeUntil(Stack *s, int value){
 void recursiveReverse(Queue *q){
 
 	// write your code here
+	Stack temp;
+	temp.ll.head = NULL;
+	temp.ll.size = 0;
+	temp.ll.tail = NULL;
+	while (!isEmptyQueue(q)) {
+		push(&temp, dequeue(q));
+	}
 
+	while (!isEmptyStack(&temp)) {
+		enqueue(q, pop(&temp));
+	}
+
+	return;
 }
 
 ////////////////////////////////////////////////////////////
@@ -138,8 +158,32 @@ void recursiveReverse(Queue *q){
 int palindrome(char *word){
 
 	// write your code here
-}
+	Stack s;
+	Queue q;
+	q.ll.head = s.ll.head = NULL;
+	q.ll.size = s.ll.size = 0;
 
+    // copy word into a stack and queue
+	for (int i = 0; i < strlen(word); i++) {
+
+        if (isspace(word[i])) {
+            continue;
+        }
+
+        char letter = tolower(word[i]);
+        push(&s, letter);
+        enqueue(&q, letter);
+	}
+
+	// check for character mismatch between word(queue) and reversed version(stack)
+	while (!isEmptyQueue(&q) && !isEmptyStack(&s)) {
+        if (pop(&s) != dequeue(&q)) {
+            return -1;
+        }
+	}
+
+	return 0;
+}
 
 
 ////////////////////////////////////////////////////////////
@@ -148,9 +192,47 @@ int palindrome(char *word){
 int balanced(char *expression){
 
 	// write your code here
+	Stack s;
+	s.ll.head = NULL;
+	s.ll.size = NULL;
 
+	int i = 0;
+	while (expression[i]) {
+        if (expression[i] == '{' || expression[i] == '(' || expression[i] == '[') {
+            push(&s, expression[i]);
+        }
+
+        else if (expression[i] == '}' || expression[i] == ')' || expression[i] == ']') {
+            if (isEmptyStack(&s)) {
+                return -1;
+            }
+
+            else if (!isMatchingPair(pop(&s), expression[i])) {
+                return -1;
+            }
+        }
+
+        // increment to next expression
+        i++;
+	}
+
+    if (isEmptyStack(&s))
+        return 0; // balanced
+    else
+        return -1; // not balanced
 }
 
+int isMatchingPair(char character1, char character2)
+{
+    if (character1 == '(' && character2 == ')')
+        return 1;
+    else if (character1 == '{' && character2 == '}')
+        return 1;
+    else if (character1 == '[' && character2 == ']')
+        return 1;
+    else
+        return 0;
+}
 ////////////////////////////////////////////////////////////////////////////////
 
 void push(Stack *s, int item){
