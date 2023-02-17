@@ -133,6 +133,22 @@ void mirrorTree(BTNode *node){
 int hasGreatGrandchild(BTNode *node){
 
 	// write your code here
+	if (node == NULL) {
+		return 0;
+	}
+
+	int l = hasGreatGrandchild(node -> left);
+	int R = hasGreatGrandchild(node -> right);
+
+	if (l >= 3 || R >= 3) {
+		printf("%d", node -> item);
+	}
+
+	if (l > R) {
+		return l + 1;
+	} else {
+		return R + 1;
+	}
 
 }
 
@@ -183,7 +199,7 @@ void printTree_InOrder(BTNode *node){
 
 	if (node == NULL) return;
 	printTree_InOrder(node->left);
-	printf("%d, ", node->item);
+	printf("%d ", node->item);
 	printTree_InOrder(node->right);
 	return;
 }
